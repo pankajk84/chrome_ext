@@ -15,6 +15,19 @@ function sendProfiles()
     
 }
 
+function loadJobs()
+{
+  console.log("Load jobs");
+  $.getJSON( "http://recruit.parably.co:8091/jobs.php", function( data ) {
+    var items = [];
+    $.each( data, function( key, val ) {
+      items.push( "<option value='" + val['uid'] + "'>" + val['title'] + "</option>" );
+    });
+
+    $("#jobs").append(items.join( "" ));
+  });
+}
+
 
 chrome.extension.onRequest.addListener(function(profiles) {
   for (var index in profiles) 
@@ -32,6 +45,8 @@ window.onload = function() {
 
   document.getElementById('extract').onclick = showExtractedProfiles;
   document.getElementById('process').onclick = sendProfiles;
+
+  loadJobs();
   
   chrome.windows.getCurrent(function (currentWindow) {
     chrome.tabs.query({active: true, windowId: currentWindow.id},
